@@ -6,6 +6,6 @@ Used as personalizaiton for spacemacs. Replaces "dotspacemacs" file at `~/.space
 
 ### Use:
 
-   '''
-   git clone https://github.com/mangosmoothie/.spacemacs.d.git ~/.spacemacs.d
-   '''
+```
+git clone https://github.com/mangosmoothie/.spacemacs.d.git ~/.spacemacs.d
+```
