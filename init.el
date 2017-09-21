@@ -59,7 +59,10 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages
+   '((vue-mode :location (recipe
+                          :fetcher github
+                          :repo "codefalling/vue-mode")))
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -311,6 +314,12 @@ you should place your code here."
 
   (add-hook 'inferior-python-mode-hook (lambda ()
                                          (setq indent-tabs-mode t)))
+
+  (defun dotspacemacs/init-vue-mode ()
+    (use-package vue-mode))
+
+  (setq js2-strict-missing-semi-warning nil)
+  (setq js2-missing-semi-one-line-override t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -325,7 +334,7 @@ you should place your code here."
  '(js-indent-level 2)
  '(package-selected-packages
    (quote
-    (yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic web-mode web-beautify tagedit slim-mode scss-mode sass-mode pug-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc helm-css-scss haml-mode emmet-mode company-web web-completion-data company-tern dash-functional tern coffee-mode winum unfill fuzzy sql-indent org markdown-mode gitignore-mode fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct pos-tip flycheck magit magit-popup git-commit with-editor company auto-dictionary auto-complete powerline request parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f diminish hydra inflections edn multiple-cursors paredit yasnippet s peg eval-sexp-fu highlight cider seq spinner queue pkg-info clojure-mode epl bind-map bind-key packed dash helm avy helm-core popup async package-build reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smeargle restart-emacs rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu elisp-slime-nav dumb-jump diff-hl define-word company-statistics column-enforce-mode clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu bracketed-paste auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (vue-mode edit-indirect yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic web-mode web-beautify tagedit slim-mode scss-mode sass-mode pug-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc helm-css-scss haml-mode emmet-mode company-web web-completion-data company-tern dash-functional tern coffee-mode winum unfill fuzzy sql-indent org markdown-mode gitignore-mode fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct pos-tip flycheck magit magit-popup git-commit with-editor company auto-dictionary auto-complete powerline request parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f diminish hydra inflections edn multiple-cursors paredit yasnippet s peg eval-sexp-fu highlight cider seq spinner queue pkg-info clojure-mode epl bind-map bind-key packed dash helm avy helm-core popup async package-build reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smeargle restart-emacs rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu elisp-slime-nav dumb-jump diff-hl define-word company-statistics column-enforce-mode clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu bracketed-paste auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(tab-always-indent (quote complete))
  '(web-mode-attr-indent-offset 2)
  '(web-mode-code-indent-offset 2)
