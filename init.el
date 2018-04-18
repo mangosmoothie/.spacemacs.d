@@ -258,8 +258,18 @@ values."
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
-   ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
-   ;; derivatives. If set to `relative', also turns on relative line numbers.
+   ;; Control line numbers activation.
+   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
+   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; This variable can also be set to a property list for finer control:
+   ;; '(:relative nil
+   ;;   :disabled-for-modes dired-mode
+   ;;                       doc-view-mode
+   ;;                       markdown-mode
+   ;;                       org-mode
+   ;;                       pdf-view-mode
+   ;;                       text-mode
+   ;;   :size-limit-kb 1000)
    ;; (default nil)
    dotspacemacs-line-numbers nil
    ;; Code folding method. Possible values are `evil' and `origami'.
@@ -312,7 +322,20 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;;dont like these actions and they conflict with cider repl
+  (global-set-key (kbd "C-k") nil)
+  (global-set-key (kbd "C-j") nil)
+
+  ;;clojure configs
   (setq clojure-enable-fancify-symbols t)
+  (define-key evil-insert-state-map (kbd "C-k") nil)
+  (with-eval-after-load "cider-mode"
+    (define-key evil-emacs-state-map (kbd "<up>") 'cider-repl-previous-input)
+    (define-key cider-repl-mode-map (kbd "C-k") 'cider-repl-previous-input)
+    (define-key cider-repl-mode-map (kbd "C-j") 'cider-repl-next-input)
+    (define-key cider-repl-mode-map (kbd "<up>") 'cider-repl-previous-input)
+    (define-key cider-repl-mode-map (kbd "<down>") 'cider-repl-next-input)
+    )
 
   (require 'helm-bookmark)
 
@@ -322,6 +345,7 @@ you should place your code here."
   (defun dotspacemacs/init-vue-mode ()
     (use-package vue-mode))
 
+  ;; js warning preferences
   (setq js2-strict-missing-semi-warning nil)
   (setq js2-missing-semi-one-line-override t)
 
