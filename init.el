@@ -360,8 +360,10 @@ you should place your code here."
   ;; web stuff
   (setq-default
    js-indent-level 2
+   javascript-indent-level 2
+   js2-basic-offset 2
    css-indent-offset 2
-   python-indent 2
+   python-indent-offset 2
    web-mode-attr-indent-offset 2
    web-mode-code-indent-offset 2
    web-mode-css-indent-offset 2
