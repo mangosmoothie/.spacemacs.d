@@ -400,7 +400,9 @@ you should place your code here."
         (make-directory todo-dir t))
       (when (not (file-exists-p todo-file))
         (write-region
-         "* unorganized [0/0] \n  :PROPERTIES:\n  :CATEGORY: unorganized\n  :END:"
+         (concat
+          "#+ARCHIVE: archive.org::\n"
+          "* unorganized [0/0] \n  :PROPERTIES:\n  :CATEGORY: unorganized\n  :END:")
          nil todo-file))
       (setq org-capture-templates
             `(("t" "Todo" entry (file+headline ,todo-file "unorganized")
