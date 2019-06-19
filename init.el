@@ -45,7 +45,7 @@ values."
      git
      ;; (markdown :variables markdown-live-preview-engine 'vmd)
      markdown
-     (org :variables org-projectile-file "~/org/TODOs.org")
+     org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -56,8 +56,7 @@ values."
      osx
      (javascript :variables node-add-modules-path t)
      react
-     (python :variables python-test-runner 'pytest)
-     evernote
+     python
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -68,9 +67,7 @@ values."
      nodejs-repl
      flycheck-joker
      prettier-js
-     (vue-mode :location (recipe
-                          :fetcher github
-                          :repo "codefalling/vue-mode")))
+     )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -329,6 +326,9 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+
+  (add-to-list 'spacemacs-jump-handlers-python-mode 'dumb-jump)
   ;;dont like these actions and they conflict with cider repl
   (global-set-key (kbd "C-k") nil)
   (global-set-key (kbd "C-j") nil)
@@ -343,11 +343,11 @@ you should place your code here."
     (define-key cider-repl-mode-map (kbd "<up>") 'cider-repl-previous-input)
     (define-key cider-repl-mode-map (kbd "<down>") 'cider-repl-next-input)
     )
+  (require 'flycheck-joker)
+  (add-to-list 'flycheck-global-modes 'clojure-mode)
+  (add-to-list 'flycheck-global-modes 'clojurescript-mode)
 
   (require 'helm-bookmark)
-
-  (defun dotspacemacs/init-vue-mode ()
-    (use-package vue-mode))
 
   ;; js warning preferences
   (setq js2-strict-missing-semi-warning nil)
@@ -396,35 +396,47 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "f" 'prettier-js)
   (spacemacs/set-leader-keys-for-major-mode 'web-mode "f" 'prettier-js)
 
-  ;; clojure-linter
-  (require 'flycheck-joker)
-  (add-to-list 'flycheck-global-modes 'clojure-mode)
-  (add-to-list 'flycheck-global-modes 'clojurescript-mode)
+  ;;python virtual envs
+  (use-package pyvenv
+    :ensure t
+    :init
+    (setenv "WORKON_HOME" "~/anaconda3/envs")
+    (pyvenv-mode 1))
+  (with-eval-after-load 'python
+    (setq python-test-runner 'pytest))
 
-
-  ;;python stuff
-  (setenv "WORKON_HOME" "/Users/wz9fht/anaconda3/envs")
-  (flycheck-add-next-checker 'python-flake8 'python-pylint)
-
-  ;; org mode stuff
+  ;; org-mode stuff - with-eval-after-load to prevent using regular org mode
   (with-eval-after-load 'org
-    (require 'org-projectile)
-    (setq org-projectile-file "~/org/TODOs.org")
-    (setq org-projectile-projects-file "~/org/TODOs.org")
-    (setq org-capture-templates
-          '(("t" "Todo" entry (file+headline "~/org/TODOs.org" "unorganized")
-             "* TODO %?")))
-    (push (org-projectile-project-todo-entry
-           :capture-character "p"
-           :capture-heading "Project todo"
-           :capture-template "* TODO %A")
-          org-capture-templates)
-    (push (org-projectile-project-todo-entry
-           :capture-character "l"
-           :capture-heading "Project todo with a link to current location"
-           :capture-template "* TODO %A")
-          org-capture-templates)
-    (setq org-agenda-files (org-projectile-todo-files)))
+    (let* ((todo-dir (expand-file-name "~/org"))
+           (todo-file (concat (file-name-as-directory todo-dir) "todos.org")))
+      (setq org-projectile-projects-file todo-file)
+      (setq org-projectile-file todo-file)
+      (require 'org-projectile)
+      (setq org-enable-github-support t)
+      (when (not (file-exists-p todo-dir))
+        (make-directory todo-dir t))
+      (when (not (file-exists-p todo-file))
+        (write-region
+         (concat
+          "#+ARCHIVE: archive.org::\n"
+          "* unorganized [0/0] \n  :PROPERTIES:\n  :CATEGORY: unorganized\n  :END:")
+         nil todo-file))
+      (setq org-capture-templates
+            `(("t" "Todo" entry (file+headline ,todo-file "unorganized")
+               "* TODO %?")))
+      (push (org-projectile-project-todo-entry
+             :capture-heading "Project todo"
+             :capture-character "p"
+             :capture-template "* TODO %?")
+            org-capture-templates)
+      (push (org-projectile-project-todo-entry
+             :capture-heading "Linked project todo from current source"
+             :capture-character "l"
+             :capture-template "* TODO %A")
+            org-capture-templates)
+      (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
+    )
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -458,12 +470,19 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(clean-aindent-mode t)
  '(indent-tabs-mode nil)
- '(org-agenda-files
-   (quote
-    ("~/org/TODOs.org" "~/projects/convert_csav3/TODOs.org" "~/projects/convert_csav3/TODOs.org" "~/projects/avsim/TODOs.org" "~/projects/pcf-test/TODOs.org" "~/projects/kotlin-koans/TODOs.org" "~/projects/datalyzer/TODOs.org")))
  '(package-selected-packages
    (quote
-    (vmd-mode nodejs-repl ghub let-alist ssass-mode vue-html-mode vue-mode edit-indirect yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic web-mode web-beautify tagedit slim-mode scss-mode sass-mode pug-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc helm-css-scss haml-mode emmet-mode company-web web-completion-data company-tern dash-functional tern coffee-mode winum unfill fuzzy sql-indent org markdown-mode gitignore-mode fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct pos-tip flycheck magit magit-popup git-commit with-editor company auto-dictionary auto-complete powerline request parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f diminish hydra inflections edn multiple-cursors paredit yasnippet s peg eval-sexp-fu highlight cider seq spinner queue pkg-info clojure-mode epl bind-map bind-key packed dash helm avy helm-core popup async package-build reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smeargle restart-emacs rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu elisp-slime-nav dumb-jump diff-hl define-word company-statistics column-enforce-mode clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu bracketed-paste auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (ox-gfm vmd-mode nodejs-repl ghub let-alist ssass-mode vue-html-mode vue-mode edit-indirect yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic web-mode web-beautify tagedit slim-mode scss-mode sass-mode pug-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc helm-css-scss haml-mode emmet-mode company-web web-completion-data company-tern dash-functional tern coffee-mode winum unfill fuzzy sql-indent org markdown-mode gitignore-mode fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct pos-tip flycheck magit magit-popup git-commit with-editor company auto-dictionary auto-complete powerline request parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f diminish hydra inflections edn multiple-cursors paredit yasnippet s peg eval-sexp-fu highlight cider seq spinner queue pkg-info clojure-mode epl bind-map bind-key packed dash helm avy helm-core popup async package-build reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smeargle restart-emacs rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu elisp-slime-nav dumb-jump diff-hl define-word company-statistics column-enforce-mode clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu bracketed-paste auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+ '(safe-local-variable-values
+   (quote
+    ((eval-after-load
+         (quote clojure-mode)
+       define-clojure-indent
+       (timers/time! 1))
+     (eval define-clojure-indent
+           (timers/time! 1))
+     (javascript-backend . tern)
+     (javascript-backend . lsp))))
  '(tab-always-indent (quote complete)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
