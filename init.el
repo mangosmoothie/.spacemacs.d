@@ -148,8 +148,8 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
-                               :weight normal
+                               :size 16
+                               :weight semibold
                                :width normal
                                :powerline-scale 1.1)
    ;; The leader key
@@ -347,8 +347,6 @@ you should place your code here."
   (add-hook 'scala-mode-hook (lambda ()
                                (setq flycheck-checker 'scala-scalastyle)))
 
-  (require 'helm-bookmark)
-
   ;; js warning preferences
   (setq js2-strict-missing-semi-warning nil)
   (setq js2-missing-semi-one-line-override t)
@@ -451,6 +449,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(clean-aindent-mode t)
+ '(delete-selection-mode nil)
  '(indent-tabs-mode nil)
  '(package-selected-packages
    (quote
