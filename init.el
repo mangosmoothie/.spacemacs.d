@@ -51,12 +51,13 @@ values."
      ;; spell-checking
      syntax-checking
      version-control
-     clojure
+     (clojure :variables clojure-enable-linters 'joker)
      osx
      (javascript :variables node-add-modules-path t)
      react
      python
      (scala :variables scala-backend 'scala-metals)
+     rust
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -65,7 +66,6 @@ values."
    dotspacemacs-additional-packages
    '(
      nodejs-repl
-     flycheck-joker
      prettier-js
      )
    ;; A list of packages that cannot be updated.
@@ -342,12 +342,9 @@ you should place your code here."
     (define-key cider-repl-mode-map (kbd "<up>") 'cider-repl-previous-input)
     (define-key cider-repl-mode-map (kbd "<down>") 'cider-repl-next-input)
     )
-  (require 'flycheck-joker)
-  (add-to-list 'flycheck-global-modes 'clojure-mode)
-  (add-to-list 'flycheck-global-modes 'clojurescript-mode)
 
   (setq-default flycheck-scalastylerc "scalastyle-config.xml")
-  (add-hook 'scala-mode-hook (lambda () (setq flycheck-checker 'scala-scalastyle)))
+  (add-hook 'scala-mode-hook (lambda () (setq flycheck-checker 'scala)))
 
   (require 'helm-bookmark)
 
