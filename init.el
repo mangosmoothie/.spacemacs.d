@@ -55,7 +55,13 @@ values."
      osx
      (javascript :variables node-add-modules-path t)
      react
-     python
+     (python :variables
+             python-backend 'anaconda
+             python-test-runner 'nose
+             python-formatter 'yapf
+             python-format-on-save t
+             python-sort-imports-on-save t)
+     (conda :variables conda-anaconda-home "~/anaconda3")
      (scala :variables scala-backend 'scala-metals)
      rust
      )
@@ -328,7 +334,6 @@ you should place your code here."
 
   (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 
-  (add-to-list 'spacemacs-jump-handlers-python-mode 'dumb-jump)
   ;;dont like these actions and they conflict with cider repl
   (global-set-key (kbd "C-k") nil)
   (global-set-key (kbd "C-j") nil)
@@ -394,15 +399,6 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'react-mode "f" 'prettier-js)
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "f" 'prettier-js)
   (spacemacs/set-leader-keys-for-major-mode 'web-mode "f" 'prettier-js)
-
-  ;;python virtual envs
-  (use-package pyvenv
-    :ensure t
-    :init
-    (setenv "WORKON_HOME" "~/anaconda3/envs")
-    (pyvenv-mode 1))
-  (with-eval-after-load 'python
-    (setq python-test-runner 'pytest))
 
   ;; org-mode stuff - with-eval-after-load to prevent using regular org mode
   (with-eval-after-load 'org
