@@ -61,6 +61,7 @@ values."
              python-formatter 'yapf
              python-format-on-save f
              python-sort-imports-on-save t)
+     (conda :variables conda-anaconda-home "~/miniconda3")
      (scala :variables scala-backend 'scala-metals)
      (rust :variables rust-backend 'racer)
      )
@@ -374,18 +375,11 @@ you should place your code here."
    javascript-indent-level 2
    js2-basic-offset 2
    css-indent-offset 2
-   python-indent-offset 4
+   python-indent-offset 2
    web-mode-attr-indent-offset 2
    web-mode-code-indent-offset 2
    web-mode-css-indent-offset 2
    web-mode-markup-indent-offset 2)
-
-  ;;python virtual envs
-  (use-package pyvenv
-    :ensure t
-    :init
-    (setenv "WORKON_HOME" "~/miniconda3/envs")
-    (pyvenv-mode 1))
 
   ;; org-mode stuff - with-eval-after-load to prevent using regular org mode
   (with-eval-after-load 'org
