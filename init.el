@@ -55,7 +55,12 @@ values."
      osx
      (javascript :variables node-add-modules-path t)
      react
-     python
+     (python :variables
+             python-backend 'anaconda
+             python-test-runner 'nose
+             python-formatter 'yapf
+             python-format-on-save f
+             python-sort-imports-on-save t)
      (scala :variables scala-backend 'scala-metals)
      (rust :variables rust-backend 'racer)
      )
