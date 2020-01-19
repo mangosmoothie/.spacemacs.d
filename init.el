@@ -59,7 +59,7 @@ values."
              python-backend 'anaconda
              python-test-runner 'nose
              python-formatter 'yapf
-             python-format-on-save f
+             python-format-on-save nil
              python-sort-imports-on-save t)
      (conda :variables conda-anaconda-home "~/miniconda3")
      (scala :variables scala-backend 'scala-metals)
