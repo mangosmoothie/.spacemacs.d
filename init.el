@@ -61,6 +61,7 @@ values."
                  javascript-import-tool 'import-js
                  javascript-backend 'lsp
                  javascript-fmt-tool 'prettier
+                 javascript-lsp-linter nil
                  js2-mode-show-strict-warnings nil
                  js2-mode-show-parse-errors nil
                  js2-strict-missing-semi-warning nil
