@@ -45,10 +45,6 @@ values."
      org
      osx
      prettier
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
-     ;; spell-checking
      sql
      syntax-checking
      version-control
@@ -66,19 +62,12 @@ values."
                  js2-mode-show-parse-errors nil
                  js2-strict-missing-semi-warning nil
                  js2-missing-semi-one-line-override t)
-
      (python :variables
              python-backend 'anaconda
              python-test-runner 'nose
              python-formatter 'yapf
              python-format-on-save nil
              python-sort-imports-on-save t)
-     (typescript :variables
-                 typescript-fmt-tool 'prettier
-                 typescript-linter 'eslint
-                 typescript-backend 'lsp
-                 typescript-lsp-linter nil
-                 typescript-fmt-on-save t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
