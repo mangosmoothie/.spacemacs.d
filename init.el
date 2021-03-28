@@ -67,7 +67,7 @@ values."
              python-test-runner 'nose
              python-formatter 'yapf
              python-format-on-save nil
-             python-sort-imports-on-save t)
+             python-sort-imports-on-save nil)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
